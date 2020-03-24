@@ -1,0 +1,100 @@
+diff -urN Makefile Makefile
+--- Makefile	1970-01-01 09:00:00.000000000 +0900
++++ Makefile	2019-11-06 14:54:10.085476426 +0900
+@@ -0,0 +1,6 @@
++all:
++	(cd OPEN_FFR; make all)
++install:
++	(cd OPEN_FFR; make install)
++clean:
++	(cd OPEN_FFR; make clean)
+diff -urN OPEN_FFR/Makefile OPEN_FFR-intel/Makefile
+--- OPEN_FFR/Makefile	1970-01-01 09:00:00.000000000 +0900
++++ OPEN_FFR-intel/Makefile	2019-11-06 14:54:10.085476426 +0900
+@@ -0,0 +1,27 @@
++FFR_PATH=FFR_V3.1.004
++INSTALL=install
++
++all:
++	mkdir -p $(FFR_PATH)/bin_FFR
++	cp Makefile.in $(FFR_PATH)/src_main/src
++	cp Makefile.in $(FFR_PATH)/src_metis_4.1_fflow
++	cp Makefile.in $(FFR_PATH)/src_pre/src
++	cp Makefile.in $(FFR_PATH)/FFR2VIZ/src
++	cd $(FFR_PATH)/src_main/src; make
++	cd $(FFR_PATH)/src_metis_4.1_fflow; make
++	cd $(FFR_PATH)/src_pre/src; make
++	cd $(FFR_PATH)/FFR2VIZ/src; make
++
++install:
++	$(INSTALL) -d $(PREFIX)/bin
++	$(INSTALL) fflowS $(PREFIX)/bin
++	$(INSTALL) fflowHPC $(PREFIX)/bin
++	$(INSTALL) prefflow $(PREFIX)/bin
++	$(INSTALL) ffr2viz $(PREFIX)/bin
++	$(INSTALL) ffrmovie $(PREFIX)/bin
++
++clean:
++	cd $(FFR_PATH)/src_main/src; make clean
++	cd $(FFR_PATH)/src_metis_4.1_fflow; make clean
++	cd $(FFR_PATH)/src_pre/src; make clean
++	cd $(FFR_PATH)/FFR2VIZ/src; make clean
+diff -urN OPEN_FFR/Makefile.in OPEN_FFR-intel/Makefile.in 
+--- OPEN_FFR/Makefile.in	1970-01-01 09:00:00.000000000 +0900
++++ OPEN_FFR-intel/Makefile.in	2019-11-26 14:16:01.376483748 +0900
+@@ -0,0 +1,24 @@
++###
++### macro definitions
++###
++###
++
++### compile for OS
++OS = Linux
++
++### Fortran compiler related macros
++F90 = ifort
++F90LINKER = ifort
++FOPTIONS = -O2 -132 -w -O2 -convert big_endian -no-offload
++
++
++### C compiler related macros
++CC = icc
++COPTIONS = -O2 -w -no-offload
++
++
++### C linker related macros
++LDOPTIONS = 
++AR = ar rv
++RANLIB = ar -ts
++# eof
+diff -urN OPEN_FFR/FFR_V3.1.004/src_main/src/Makefile OPEN_FFR-intel/FFR_V3.1.004/src_main/src/Makefile
+--- OPEN_FFR/FFR_V3.1.004/src_main/src/Makefile	2015-09-24 10:59:14.000000000 +0900
++++ OPEN_FFR-intel/FFR_V3.1.004/src_main/src/Makefile	2019-11-07 14:03:56.369469354 +0900
+@@ -16,7 +16,7 @@
+ RM = rm -f
+ 
+ ### Fortran compiler related macros
+-FFLAGS = $(FOPTIONS) $(INC_DIR) $(MPI_INC)
++FFLAGS = $(FOPTIONS) $(INC_DIR)
+ #FLIBS = -lls
+ #FLIBS = -llssrv  # (if needed)
+ 
+@@ -124,7 +124,7 @@
+ parallel: $(OBJPARALLEL)
+ #	echo '//     link $< ...'
+ #	echo '//     link $< ...'
+-	$(MPI_F90) $(FFLAGS) $(MPI_INC) $(OBJPARALLEL) -o $(FFR_PARALLEL) $(FLIBS) $(MPI_LIBS)
++	$(MPIF90) $(FFLAGS) $(OBJPARALLEL) -o $(FFR_PARALLEL) $(FLIBS)
+ 	cp -f $(FFR_PARALLEL) $(INSTALL_DIR)/fflowHPC
+ 	cp -f $(FFR_PARALLEL) ../../bin_FFR/fflowHPC
+ 
+@@ -139,6 +139,9 @@
+ $(OBJMAIN): $(MAIN)
+ 	$(F90) $(FFLAGS) -c $? -o $@
+ 
++module_hpc.o: module_hpc.f
++	$(MPIF90) $(FFLAGS) -c $<
++
+ install:
+ 	-rm -fr $(MODDIR)
+ 	-mkdir  $(MODDIR)

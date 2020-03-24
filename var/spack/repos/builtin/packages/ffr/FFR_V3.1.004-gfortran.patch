@@ -1,0 +1,63 @@
+diff -urN OPEN_FFR/FFR_V3.1.004/FFR2VIZ/src/tovtk.f OPEN_FFR-gfortran/FFR_V3.1.004/FFR2VIZ/src/tovtk.f
+--- OPEN_FFR/FFR_V3.1.004/FFR2VIZ/src/tovtk.f	2015-09-24 01:59:14.000000000 +0000
++++ OPEN_FFR-gfortran/FFR_V3.1.004/FFR2VIZ/src/tovtk.f	2015-11-09 14:54:52.173074900 +0000
+@@ -203,7 +203,7 @@
+      &        nvrtx,
+      &        "float"
+         write(lun,
+-     &        fmt=fmt_data,
++     &        fmt=*,
+      &        iostat=rc,
+      &        err=9020)
+      &          (real(cord(1, ii)),
+@@ -510,7 +510,7 @@
+      &          VTK_LOOKUP_TABLE,
+      &          "default"
+         write(lun,
+-     &        fmt=fmt_data,
++     &        fmt=*,
+      &        iostat=rc,
+      &        err=9050)
+      &          (real(totdata(offset, ii)), ii=1, nvrtx)
+@@ -554,7 +554,7 @@
+      &          trim(byname),
+      &          "float"
+         write(lun,
+-     &        fmt=fmt_data,
++     &        fmt=*,
+      &        iostat=rc,
+      &        err=9060)
+      &          (real(totdata(offset, ii)),
+diff -urN OPEN_FFR/FFR_V3.1.004/FFR2VIZ/src/writeFLUENTHeader.f OPEN_FFR-gfortran/FFR_V3.1.004/FFR2VIZ/src/writeFLUENTHeader.f
+--- OPEN_FFR/FFR_V3.1.004/FFR2VIZ/src/writeFLUENTHeader.f	2015-09-24 01:59:14.000000000 +0000
++++ OPEN_FFR-gfortran/FFR_V3.1.004/FFR2VIZ/src/writeFLUENTHeader.f	2015-11-09 14:55:11.555536200 +0000
+@@ -144,7 +144,7 @@
+       write(ifl,120) '(4 (60 0 0 1 2 4 4 4 8 8 4))'
+       write(ifl,120) ''
+       write(ifl,120) '(0 "Grid size:")'
+-      write(ifl,121) '(33 (',ncell,NFCE,nvrtx,'))'
++      write(ifl,*) '(33 (',ncell,NFCE,nvrtx,'))'
+       write(ifl,120) ''
+       write(ifl,120) '(0 "Variables:")'
+       write(ifl,120) '(37 ('
+@@ -162,7 +162,7 @@
+       end if
+ 
+  120  format(A)
+- 121  format(A,3I,A)
++* 121  format(A,3I,A)
+  122  format(A,A,A)
+ 
+       status=0
+diff -urN OPEN_FFR/FFR_V3.1.004/src_metis_4.1_fflow/Lib/rename.h OPEN_FFR-gfortran/FFR_V3.1.004/src_metis_4.1_fflow/Lib/rename.h
+--- OPEN_FFR/FFR_V3.1.004/src_metis_4.1_fflow/Lib/rename.h	2015-09-24 01:59:14.000000000 +0000
++++ OPEN_FFR-gfortran/FFR_V3.1.004/src_metis_4.1_fflow/Lib/rename.h	2015-11-09 14:54:19.621941500 +0000
+@@ -410,7 +410,7 @@
+ #define RandomPermute			__RandomPermute
+ #define ispow2				__ispow2
+ #define InitRandom			__InitRandom
+-#define log2				__log2
++#define log2				ilog2
+ 
+ 
+ 
