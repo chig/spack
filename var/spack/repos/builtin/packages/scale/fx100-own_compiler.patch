@@ -1,0 +1,23 @@
+diff -urN sysdep/Makedef.FX100 sysdep/Makedef.FX100
+--- sysdep/Makedef.FX100	2019-11-13 11:08:55.000000000 +0900
++++ sysdep/Makedef.FX100	2019-12-20 13:50:53.000000000 +0900
+@@ -7,8 +7,8 @@
+ ##### Fortran setting
+ #FFLAGS is set in Mkinclude. FFLAGS_DEBUG is used if SCALE_DEBUG=T
+
+-FC  = mpifrtpx
+-SFC = frtpx
++FC  = mpifrt
++SFC = frt
+ MODDIROPT = -M
+
+ FFLAGS_FAST  = -Kfast,parallel,ocl,preex,array_private,noalias=s,mfunc=2 \
+@@ -35,7 +35,7 @@
+ ##### C setting
+ #CFLAGS is set in Mkinclude. CFLAGS_DEBUG is used if SCALE_DEBUG=T
+
+-CC = mpifccpx
++CC = mpifcc
+
+ CFLAGS_FAST  = -Kfast,parallel,ocl,preex,array_private,region_extension,restp=all -Ksimd
+ CFLAGS_DEBUG = -O0
